@@ -1,0 +1,31 @@
+openapi: 3.0.0
+...
+# 1) Define the security scheme type (HTTP bearer)
+components:
+  securitySchemes:
+    bearerAuth: # arbitrary name for the security scheme
+      type: http
+      scheme: bearer
+      bearerFormat: JWT    # optional, arbitrary value for documentation purposes
+  # 2) Apply the security globally to all operations
+  security:
+    - bearerAuth: [ ]         # use the same name as above
+  responses:
+    UnauthorizedError:
+      description: Access token is missing or invalid
+
+  paths:
+    /api/v1/user/uploadImage:
+      post:
+        summary: Upload user image
+        consumes:
+          - multipart/form-data
+        parameters:
+          - in: formData
+            name: file
+            type: file
+            description: The file to upload
+        responses:
+          '200':
+            description: Image uploaded successfully
+

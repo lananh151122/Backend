@@ -1,0 +1,120 @@
+spring:
+  servlet:
+    multipart:
+      max-file-size: 10MB
+  jackson:
+    serialization:
+      FAIL_ON_EMPTY_BEANS: false
+  application:
+    name: salespage-service
+  autoconfigure:
+    exclude:
+      - org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
+      - org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration
+  kafka:
+    listener:
+      type: single
+      ack-mode: manual_immediate
+      missing-topics-fatal: false
+      concurrency: ${KAFKA_CONSUMER_CONCURRENCY:4}
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:103.237.145.60:9092}
+    topic:
+      replication-factor: ${KAFKA_REPLICATION_FACTOR}
+      num-partitions: ${KAFKA_NUM_PARTITIONS}
+    producer:
+      acks: all
+      retries: 1000
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+      properties:
+        schema.registry.url: ${SCHEMA_REGISTRY_URL}
+        specific.avro.reader: true
+      template:
+        default-topic: test
+    consumer:
+      enable-auto-commit: false
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      properties:
+        request:
+          timeout:
+            ms: 120000
+        schema.registry.url: ${SCHEMA_REGISTRY_URL}
+        specific.avro.reader: true
+      max-poll-records: ${KAFKA_MAX_POLL_RECORDS:3}
+      fetch-max-wait: ${KAFKA_FETCH_MAX_WAIT:5000}
+      fetch-min-size: ${KAFKA_FETCH_MIN_SIZE:30000} #khoang 200 message
+      group-id: "salepage-consumer-service"
+      isolation-level: read_committed
+  data:
+    mongodb:
+      uri: ${MONGODB_URI}
+  aop:
+    proxy-target-class: true
+  main:
+    allow-bean-definition-overriding: true
+
+springdoc:
+  api-docs:
+    path: /v1/sale/docs/api/index.html
+  swagger-ui:
+    path: /v1/sale/docs/index.html
+    display-request-duration: true
+    syntax-highlight:
+      activated: true
+      theme: monokai
+    filter: true
+    tags-sorter: alpha
+    operations-sorter: alpha
+
+debug: ${DEBUG:debug}
+
+server:
+  port: ${PORT:8080}
+
+google:
+  api:
+    url: ${DRIVER_URI}
+
+jwt:
+  publicKey: ${JWT_PUBLIC_KEY}
+  privateKey: ${JWT_PRIVATE_KEY}
+
+casso:
+  url: ${CASSO_URL:https://oauth.casso.vn}
+  apikey: ${CASSO_APIKEY:AK_CS.98fc80800a6a11ee8283e1e814dacc44.8q0lezp6f8bcEdLzdztIwXjvTW22vRe6ljavqquvlupWG0O4ELGONx0NpH3UhtDtuJT4tgta}
+  token: ${CASSO_TOKEN:lam12345}
+  client-id: ${CASSO_CLIENT_ID:82d12a60-0900-11ee-9f74-0fa8491e0bd2}
+  bank-acc-id: ${CASSO_BANK_ACC_ID:8400134433008}
+
+vietqr:
+  api:
+    client-id: ${VIETQR_CLIENTID:7a18d4ca-e369-44ea-9095-a1f8c2e5b006}
+    apikey: ${VIETQR_APIKEY:50ca1634-2c29-4386-8047-3593008466b2}
+    url: ${VIETQR_URL:https://api.vietqr.io}
+
+tp-bank:
+  account-no: ${TP_BANK_ACCOUNT_NO:00002432405}
+  api:
+    url: ${TP_BANK_URL:https://ebank.tpb.vn/gateway}
+    username: ${TP_BANK_USERNAME:0979163206}
+    password: ${TP_BANK_PASSWORD:Banhmy09@}
+    device-id: ${TP_BANK_DEVICEID:jZ3l7guUAipewndFIFtkpc8cjnr0NoF3jJWYxRg2gsStn}
+
+mb-bank:
+  url: ${URL:https://api.web2m.com/historyapimb}
+  password: ${PASSWORD:Banhmy099@}
+  token: ${TOKEN:7C37EBA7-1CA6-835F-9301-301551D39130}
+  account-no : ${ACCOUNT_NO:8400134433008}
+
+goong:
+  url: ${GOONG_URL:https://rsapi.goong.io}
+  api-key: ${GOONG_API_KEY:v1DJOAPJpz8e6wHfg50LXQuMQThGJhbT6BYFwdCn}
+
+twilio:
+  token : ${AUTH_TOKEN:6110a808d7174e32b183705194903c8b}
+
+upload:
+  folder: ${UPLOAD_FOLDER:D:/upload}
+  url : ${UPLOAD_URL:123}
